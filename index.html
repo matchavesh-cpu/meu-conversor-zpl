@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZPL para PDF - Sem Limites</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 900px; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; }
+        .config-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .config-group { flex: 1; min-width: 150px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9em; }
+        select, input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        textarea { width: 100%; height: 300px; padding: 15px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; resize: vertical; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background-color: #27ae60; color: white; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; margin-top: 20px; transition: background 0.3s; }
+        button:hover { background-color: #219150; }
+        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        #status { margin-top: 15px; text-align: center; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Conversor ZPL para PDF</h1>
+    
+    <div class="config-row">
+        <div class="config-group">
+            <label>Densidade (dpmm)</label>
+            <select id="dpmm">
+                <option value="6">6 dpmm (152 dpi)</option>
+                <option value="8" selected>8 dpmm (203 dpi)</option>
+                <option value="12">12 dpmm (300 dpi)</option>
+                <option value="24">24 dpmm (600 dpi)</option>
+            </select>
+        </div>
+        <div class="config-group">
+            <label>Largura (Pol.)</label>
+            <input type="number" id="width" value="4" step="0.1">
+        </div>
+        <div class="config-group">
+            <label>Altura (Pol.)</label>
+            <input type="number" id="height" value="6" step="0.1">
+        </div>
+    </div>
+
+    <label>Cole seu código ZPL gigante aqui:</label>
+    <textarea id="zplInput" placeholder="Comece com ^XA e termine com ^XZ..."></textarea>
+
+    <button id="convertBtn">Gerar PDF e Abrir</button>
+    <div id="status"></div>
+</div>
+
+<script>
+    document.getElementById('convertBtn').addEventListener('click', async () => {
+        const zpl = document.getElementById('zplInput').value;
+        const dpmm = document.getElementById('dpmm').value;
+        const width = document.getElementById('width').value;
+        const height = document.getElementById('height').value;
+        const btn = document.getElementById('convertBtn');
+        const status = document.getElementById('status');
+
+        if (!zpl.trim()) {
+            alert("Por favor, insira o código ZPL.");
+            return;
+        }
+
+        btn.disabled = true;
+        status.innerText = "Processando... Isso pode levar um tempo para arquivos grandes.";
+        status.style.color = "#2980b9";
+
+        try {
+            // Chamada para a API pública do Labelary
+            const response = await fetch(`http://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/pdf',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: zpl
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                const pdfUrl = URL.createObjectURL(blob);
+                
+                // Abre o PDF em uma nova aba
+                window.open(pdfUrl, '_blank');
+                
+                status.innerText = "Sucesso! O PDF foi aberto em uma nova aba.";
+                status.style.color = "#27ae60";
+            } else {
+                const errorText = await response.text();
+                status.innerText = "Erro na API: " + errorText;
+                status.style.color = "#c0392b";
+            }
+        } catch (error) {
+            status.innerText = "Erro de conexão. Verifique se você está online.";
+            status.style.color = "#c0392b";
+            console.error(error);
+        } finally {
+            btn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+<head>
+    <title>Conversor ZPL para PDF Online - Sem Limite de Tamanho</title>
+    
+    <meta name="description" content="Converta arquivos ZPL gigantes para PDF instantaneamente. Sem limites de caracteres, processamento via POST direto para a API Labelary.">
+    
+    <meta name="keywords" content="ZPL, PDF, Converter, Labelary, Grande, Ilimitado, Zebra, Etiqueta">
+    
+    <meta name="robots" content="index, follow">
+</head>
+</html>
