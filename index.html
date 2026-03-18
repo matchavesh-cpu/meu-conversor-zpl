@@ -3,47 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZPL para PDF - Alta Performance</title>
-    <meta name="description" content="Converta arquivos ZPL gigantes para PDF. Suporte para upload de arquivos pesados.">
+    <title>Conversor ZPL Pro - Ultra Performance</title>
     <style>
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #f0f2f5; color: #1a1a1a; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 900px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
+        .container { width: 100%; max-width: 800px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
         h1 { color: #1e293b; text-align: center; margin-top: 0; }
         
-        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 8px; }
+        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 8px; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #64748b; }
         select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
         
-        .upload-area { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 20px; transition: border 0.3s; }
-        .upload-area:hover { border-color: #3b82f6; }
+        .upload-section { border: 2px dashed #3b82f6; padding: 25px; text-align: center; border-radius: 8px; margin-bottom: 20px; background: #eff6ff; }
+        input[type="file"] { margin-top: 10px; font-size: 0.9rem; }
         
-        textarea { width: 100%; height: 200px; padding: 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: 'Cascadia Code', monospace; resize: vertical; box-sizing: border-box; font-size: 13px; }
+        textarea { width: 100%; height: 150px; padding: 15px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: monospace; resize: vertical; box-sizing: border-box; }
         
-        .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        button { width: 100%; padding: 16px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        button:hover { background-color: #1d4ed8; transform: translateY(-1px); }
-        button:disabled { background-color: #94a3b8; cursor: not-allowed; transform: none; }
+        button { width: 100%; padding: 18px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.2s; }
+        button:hover { background-color: #1d4ed8; }
+        button:disabled { background-color: #94a3b8; cursor: not-allowed; }
         
-        #status { margin-top: 20px; text-align: center; padding: 10px; border-radius: 6px; font-weight: 500; min-height: 24px; }
-        .status-loading { color: #2563eb; background: #eff6ff; }
-        .status-success { color: #16a34a; background: #f0fdf4; }
-        .status-error { color: #dc2626; background: #fef2f2; }
+        #status { margin-top: 20px; text-align: center; padding: 15px; border-radius: 6px; font-weight: 500; min-height: 20px; white-space: pre-line; }
+        .status-loading { color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; }
+        .status-success { color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; }
+        .status-error { color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; }
         
-        .divider { text-align: center; margin: 15px 0; color: #94a3b8; font-size: 0.9rem; position: relative; }
-        .divider::before { content: ""; position: absolute; left: 0; top: 50%; width: 45%; height: 1px; background: #e2e8f0; }
-        .divider::after { content: ""; position: absolute; right: 0; top: 50%; width: 45%; height: 1px; background: #e2e8f0; }
+        .divider { text-align: center; margin: 20px 0; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Conversor ZPL Pro</h1>
+    <h1>ZPL to PDF Bulk Converter</h1>
     
     <div class="config-grid">
         <div>
             <label>Densidade</label>
             <select id="dpmm">
-                <option value="6">6 dpmm (152 dpi)</option>
+                <option value="6">6 dpmm (150 dpi)</option>
                 <option value="8" selected>8 dpmm (203 dpi)</option>
                 <option value="12">12 dpmm (300 dpi)</option>
                 <option value="24">24 dpmm (600 dpi)</option>
@@ -59,19 +55,16 @@
         </div>
     </div>
 
-    <div class="upload-area">
-        <label>Carregar Arquivo ZPL Grande</label>
+    <div class="upload-section">
+        <label>📁 Carregue um arquivo pesado (.zpl ou .txt)</label>
         <input type="file" id="fileInput" accept=".zpl,.txt">
     </div>
 
-    <div class="divider">OU</div>
+    <div class="divider">ou cole o código abaixo</div>
 
-    <label>Colar Código ZPL</label>
-    <textarea id="zplInput" placeholder="^XA..."></textarea>
+    <textarea id="zplInput" placeholder="Comece com ^XA..."></textarea>
 
-    <div class="actions">
-        <button id="convertBtn">Gerar PDF e Abrir</button>
-    </div>
+    <button id="convertBtn">PROCESSAR E BAIXAR PDF(S)</button>
     
     <div id="status"></div>
 </div>
@@ -82,69 +75,89 @@
     const fileInput = document.getElementById('fileInput');
     const zplInput = document.getElementById('zplInput');
 
-    async function convertZPL() {
-        let zplContent = "";
-        
-        // Prioriza o arquivo se houver um selecionado
-        if (fileInput.files.length > 0) {
-            zplContent = await fileInput.files[0].text();
-        } else {
-            zplContent = zplInput.value;
-        }
-
-        if (!zplContent.trim()) {
-            updateStatus("Por favor, cole o código ou selecione um arquivo.", "error");
-            return;
-        }
-
-        const dpmm = document.getElementById('dpmm').value;
-        const width = document.getElementById('width').value;
-        const height = document.getElementById('height').value;
-
-        btn.disabled = true;
-        updateStatus("Processando carga pesada... Aguarde.", "loading");
-
-        try {
-            // Labelary API aceita POST com o corpo bruto do ZPL
-            const response = await fetch(`https://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/pdf'
-                    // Removido o x-www-form-urlencoded para evitar problemas com caracteres especiais em arquivos gigantes
-                },
-                body: zplContent
-            });
-
-            if (response.ok) {
-                const blob = await response.blob();
-                const pdfUrl = URL.createObjectURL(blob);
-                
-                // Melhor prática para navegadores modernos
-                const link = document.createElement('a');
-                link.href = pdfUrl;
-                link.target = '_blank';
-                link.click();
-                
-                updateStatus("Sucesso! O PDF foi gerado.", "success");
-            } else {
-                const errorText = await response.text();
-                updateStatus("Erro na API: " + errorText.substring(0, 100), "error");
-            }
-        } catch (error) {
-            updateStatus("Erro de conexão. O arquivo pode ser grande demais para o seu navegador ou rede.", "error");
-            console.error(error);
-        } finally {
-            btn.disabled = false;
-        }
-    }
-
     function updateStatus(text, type) {
         status.innerText = text;
         status.className = '';
         if(type) status.classList.add(`status-${type}`);
     }
 
-    btn.addEventListener('click', convertZPL);
+    async function processZPL() {
+        let zplText = "";
+        
+        // 1. Pega o conteúdo (Arquivo ou Textarea)
+        if (fileInput.files.length > 0) {
+            zplText = await fileInput.files[0].text();
+        } else {
+            zplText = zplInput.value;
+        }
+
+        if (!zplText.trim()) {
+            updateStatus("⚠️ Nada para processar! Selecione um arquivo ou cole o código.", "error");
+            return;
+        }
+
+        // 2. Divide em etiquetas individuais baseadas no comando ^XZ
+        // Usamos regex global /i para não diferenciar maiúsculas de minúsculas
+        const labels = zplText.split(/\^XZ/i).filter(l => l.trim().includes('^XA')).map(l => l + "^XZ");
+        
+        if (labels.length === 0) {
+            updateStatus("❌ Código ZPL inválido. Certifique-se de usar ^XA e ^XZ.", "error");
+            return;
+        }
+
+        const batchSize = 40; // Número de etiquetas por PDF (Lote seguro para API)
+        const totalBatches = Math.ceil(labels.length / batchSize);
+        const dpmm = document.getElementById('dpmm').value;
+        const width = document.getElementById('width').value;
+        const height = document.getElementById('height').value;
+
+        btn.disabled = true;
+        updateStatus(`🚀 Iniciando: ${labels.length} etiquetas detectadas.\nProcessando em ${totalBatches} lote(s)...`, "loading");
+
+        try {
+            for (let i = 0; i < totalBatches; i++) {
+                const start = i * batchSize;
+                const end = start + batchSize;
+                const currentBatchZPL = labels.slice(start, end).join("\n");
+
+                updateStatus(`⏳ Gerando lote ${i + 1} de ${totalBatches}...`, "loading");
+
+                const response = await fetch(`https://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/`, {
+                    method: 'POST',
+                    headers: { 
+                        'Accept': 'application/pdf',
+                        'Content-Type': 'text/plain' 
+                    },
+                    body: currentBatchZPL
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Cria o download silencioso
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = totalBatches > 1 ? `etiquetas_parte_${i + 1}.pdf` : `etiquetas.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url); // Limpa memória
+                } else {
+                    const errorMsg = await response.text();
+                    throw new Error(`Erro no Lote ${i+1}: ${errorMsg}`);
+                }
+            }
+            updateStatus(`✅ Sucesso! ${labels.length} etiquetas processadas.\nOs arquivos foram baixados automaticamente.`, "success");
+        } catch (err) {
+            updateStatus("❌ Erro: " + err.message, "error");
+            console.error(err);
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    btn.addEventListener('click', processZPL);
 </script>
 
 </body>
