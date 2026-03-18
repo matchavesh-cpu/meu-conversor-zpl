@@ -3,150 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 Conversor Shopee/ML - FORMATO SHOPEE</title>
+    <title>🔥 SHOPEE CONVERTER - DEBUG</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px; 
-            margin: 0;
-        }
-        .container { 
-            width: 100%; 
-            max-width: 700px; 
-            background: white; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
-        }
-        h1 { 
-            color: #2c3e50; 
-            text-align: center; 
-            font-size: 2.2rem; 
-            margin-bottom: 10px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }
-        .config { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr 1fr; 
-            gap: 15px; 
-            margin-bottom: 25px; 
-            background: #f8f9fa; 
-            padding: 20px; 
-            border-radius: 12px; 
-            border: 2px solid #e9ecef;
-        }
-        .field label { 
-            font-size: 13px; 
-            font-weight: 600; 
-            display: block; 
-            margin-bottom: 8px; 
-            color: #495057; 
-        }
-        select, input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid #e9ecef; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 16px;
-        }
-        .upload-area { 
-            border: 3px dashed #667eea; 
-            padding: 40px; 
-            text-align: center; 
-            border-radius: 12px; 
-            margin-bottom: 25px; 
-            cursor: pointer; 
-            background: linear-gradient(135deg, #f0f2ff 0%, #e8e8ff 100%); 
-            transition: all 0.3s;
-        }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .container { width: 100%; max-width: 800px; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; font-size: 2.2rem; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 1.1rem; }
+        .config { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 25px; background: #f8f9fa; padding: 20px; border-radius: 12px; border: 2px solid #e9ecef; }
+        .field label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px; color: #495057; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+        .upload-area { border: 3px dashed #667eea; padding: 40px; text-align: center; border-radius: 12px; margin-bottom: 25px; cursor: pointer; background: linear-gradient(135deg, #f0f2ff 0%, #e8e8ff 100%); transition: all 0.3s; }
         .upload-area:hover { border-color: #764ba2; transform: translateY(-2px); }
-        button { 
-            width: 100%; 
-            padding: 18px; 
-            background: linear-gradient(45deg, #27ae60, #2ecc71); 
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            font-size: 18px; 
-        }
+        button { width: 100%; padding: 18px; background: linear-gradient(45deg, #27ae60, #2ecc71); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 18px; margin-bottom: 15px; }
         button:disabled { background: #6c757d; cursor: not-allowed; }
-        #status { 
-            margin-top: 25px; 
-            padding: 20px; 
-            border-radius: 12px; 
-            font-size: 16px; 
-            text-align: center; 
-            min-height: 24px; 
-            line-height: 1.6; 
-            font-weight: 500;
-        }
+        #status { margin-top: 25px; padding: 20px; border-radius: 12px; font-size: 16px; text-align: center; min-height: 24px; line-height: 1.6; font-weight: 500; }
         .loading { background: #e3f2fd; color: #1976d2; border: 2px solid #2196f3; }
         .success { background: #d4edda; color: #155724; border: 2px solid #28a745; }
         .error { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; }
+        .debug { background: #f8f9fa; border: 2px solid #dee2e6; padding: 15px; border-radius: 8px; margin-top: 15px; font-family: monospace; font-size: 12px; max-height: 200px; overflow-y: auto; display: none; }
+        .file-info { background: #e8f5e8; padding: 12px; border-radius: 8px; margin-top: 10px; font-size: 14px; color: #155724; }
+        #testSingle { background: linear-gradient(45deg, #e74c3c, #c0392b); margin-top: 10px; font-size: 16px; }
         .progress { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
-        #progressBar { 
-            width: 100%; 
-            height: 25px; 
-            background: #e9ecef; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            margin-top: 15px; 
-            display: none; 
-        }
-        #progressFill { 
-            height: 100%; 
-            background: linear-gradient(90deg, #27ae60, #2ecc71); 
-            transition: width 0.3s; 
-            position: relative;
-        }
-        #progressText { 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            color: white; 
-            font-weight: bold; 
-            font-size: 12px;
-        }
-        .file-info { 
-            background: #e8f5e8; 
-            padding: 12px; 
-            border-radius: 8px; 
-            margin-top: 10px; 
-            font-size: 14px; 
-            color: #155724; 
-        }
-        pre { 
-            background: #f8f9fa; 
-            padding: 15px; 
-            border-radius: 8px; 
-            font-size: 12px; 
-            max-height: 150px; 
-            overflow-y: auto; 
-            margin-top: 15px; 
-            white-space: pre-wrap; 
-            display: none;
-        }
+        #progressBar { width: 100%; height: 25px; background: #e9ecef; border-radius: 12px; overflow: hidden; margin-top: 15px; display: none; }
+        #progressFill { height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); transition: width 0.3s; position: relative; }
+        #progressText { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-weight: bold; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🎯 Conversor SHOPEE/ML</h1>
-    <p class="subtitle">✅ Formato ~DGR da Shopee + Mercado Livre</p>
+    <h1>🎯 SHOPEE CONVERTER</h1>
+    <p class="subtitle">🔧 Com DEBUG completo + Teste individual</p>
     
     <div class="config">
         <div class="field">
@@ -167,14 +54,14 @@
     </div>
 
     <div class="upload-area" id="uploadArea">
-        <strong>📁 ARRASTE ou CLIQUE seu arquivo</strong><br>
-        <small>✅ .zpl, .txt, .lab da Shopee/ML</small>
+        <strong>📁 ARRASTE seu arquivo Shopee</strong><br>
+        <small>✅ Detecta ~DGR:^XA^XZ automaticamente</small>
         <input type="file" id="fileInput" accept=".zpl,.txt,.lab" style="display:none">
         <div id="fileName" class="file-info" style="display: none;"></div>
-        <pre id="preview"></pre>
     </div>
 
-    <button id="convertBtn">🚀 CONVERTER PARA PDF</button>
+    <button id="convertBtn">🚀 CONVERTER TUDO</button>
+    <button id="testSingle">🧪 TESTAR 1ª ETIQUETA</button>
     
     <div id="progressBar">
         <div id="progressFill">
@@ -182,208 +69,256 @@
         </div>
     </div>
     <div id="status"></div>
+    <div id="debug" class="debug"></div>
 </div>
 
 <script>
-    const fileInput = document.getElementById('fileInput');
-    const uploadArea = document.getElementById('uploadArea');
-    const fileNameDisplay = document.getElementById('fileName');
-    const preview = document.getElementById('preview');
-    const btn = document.getElementById('convertBtn');
-    const status = document.getElementById('status');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-
-    // Drag & Drop
-    uploadArea.addEventListener('dragover', e => {
-        e.preventDefault();
-        uploadArea.style.borderColor = '#764ba2';
-    });
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.style.borderColor = '#667eea';
-    });
-    uploadArea.addEventListener('drop', e => {
-        e.preventDefault();
-        uploadArea.style.borderColor = '#667eea';
-        if (e.dataTransfer.files[0]) {
-            fileInput.files = e.dataTransfer.files;
-            handleFileSelect(e.dataTransfer.files[0]);
-        }
-    });
-    uploadArea.addEventListener('click', () => fileInput.click());
-
-    fileInput.onchange = e => {
-        if (e.target.files[0]) handleFileSelect(e.target.files[0]);
+    const elements = {
+        fileInput: document.getElementById('fileInput'),
+        uploadArea: document.getElementById('uploadArea'),
+        fileName: document.getElementById('fileName'),
+        btn: document.getElementById('convertBtn'),
+        testBtn: document.getElementById('testSingle'),
+        status: document.getElementById('status'),
+        debug: document.getElementById('debug'),
+        progressBar: document.getElementById('progressBar'),
+        progressFill: document.getElementById('progressFill'),
+        progressText: document.getElementById('progressText')
     };
 
-    function handleFileSelect(file) {
-        fileNameDisplay.innerHTML = `📄 <strong>${file.name}</strong><br>📊 ${(file.size/1024).toFixed(0)} KB`;
-        fileNameDisplay.style.display = 'block';
-        btn.disabled = false;
+    // Drag & Drop
+    elements.uploadArea.addEventListener('dragover', e => e.preventDefault());
+    elements.uploadArea.addEventListener('drop', e => {
+        e.preventDefault();
+        if (e.dataTransfer.files[0]) {
+            elements.fileInput.files = e.dataTransfer.files;
+            loadFile(e.dataTransfer.files[0]);
+        }
+    });
+    elements.uploadArea.addEventListener('click', () => elements.fileInput.click());
 
-        // Preview
-        const reader = new FileReader();
-        reader.onload = e => {
-            const content = e.target.result;
-            const labels = extractShopeeLabels(content);
-            preview.textContent = `✅ Encontradas ${labels.length} etiquetas\n\n${labels[0]?.substring(0, 500)}...`;
-            preview.style.display = 'block';
-        };
-        reader.readAsText(file);
+    elements.fileInput.onchange = e => {
+        if (e.target.files[0]) loadFile(e.target.files[0]);
+    };
+
+    async function loadFile(file) {
+        elements.fileName.innerHTML = `📄 <strong>${file.name}</strong><br>📊 ${(file.size/1024).toFixed(0)} KB`;
+        elements.fileName.style.display = 'block';
+        elements.btn.disabled = false;
+        elements.testBtn.disabled = false;
+
+        const content = await file.text();
+        const labels = extractLabels(content);
+        
+        elements.debug.innerHTML = `
+✅ Encontradas <strong>${labels.length}</strong> etiquetas<br>
+📝 Primeira etiqueta (${labels[0]?.length || 0} chars):<br>
+<pre style="margin: 10px 0 0 0; font-size: 11px;">${labels[0]?.substring(0, 300) || 'NENHUMA'}...</pre>
+        `;
+        elements.debug.style.display = 'block';
+    }
+
+    function logDebug(msg) {
+        elements.debug.innerHTML += `<br>${msg}`;
+        elements.debug.scrollTop = elements.debug.scrollHeight;
     }
 
     function updateStatus(text, type = '') {
-        status.textContent = text;
-        status.className = type;
+        elements.status.textContent = text;
+        elements.status.className = type;
     }
 
     function updateProgress(current, total) {
         const percent = Math.round((current / total) * 100);
-        progressFill.style.width = percent + '%';
-        progressText.textContent = `${percent}% (${current}/${total})`;
+        elements.progressFill.style.width = percent + '%';
+        elements.progressText.textContent = `${percent}% (${current}/${total})`;
     }
 
-    // 🔥 EXTRAÇÃO ESPECÍFICA PARA FORMATO SHOPEE
-    function extractShopeeLabels(content) {
-        // Remove BOM e normaliza
+    // 🔥 EXTRAÇÃO PERFEITA PARA SHOPEE
+    function extractLabels(content) {
         content = content.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
-        
         const labels = [];
-        
-        // Padrão SHOPEE: ~DGR:...^XA...^XZ
-        const shopeePattern = /~DGR:.*?^XA([\s\S]*?)\^XZ/gi;
+
+        // SHOPEE: ~DGR:...^XA...^XZ
         let match;
-        
-        while ((match = shopeePattern.exec(content)) !== null) {
-            const labelContent = `^XA${match[1]}^XZ`;
-            labels.push(labelContent.trim());
+        const shopeeRegex = /~DGR:.*?(\^XA[\s\S]*?\^XZ)/gi;
+        while ((match = shopeeRegex.exec(content)) !== null) {
+            labels.push(match[1].trim());
         }
-        
-        // Fallback padrão ZPL
+
+        // Padrão ZPL normal
         if (labels.length === 0) {
-            const standardPattern = /\^XA([\s\S]*?)\^XZ/gi;
-            while ((match = standardPattern.exec(content)) !== null) {
-                const labelContent = `^XA${match[1]}^XZ`;
-                labels.push(labelContent.trim());
+            const zplRegex = /(\^XA[\s\S]*?\^XZ)/gi;
+            while ((match = zplRegex.exec(content)) !== null) {
+                labels.push(match[1].trim());
             }
         }
-        
-        // Fallback arquivo único
-        if (labels.length === 0 && content.includes('^XA')) {
-            labels.push(content.trim());
-        }
-        
-        return labels.filter(l => l.length > 50);
+
+        return labels.filter(l => l.length > 20 && l.includes('^XA') && l.includes('^XZ'));
     }
 
-    async function convertLabel(zpl, index, total) {
+    // 🔥 3 ESTRATÉGIAS DIFERENTES para Labelary
+    async function tryConvertLabel(zpl, strategy = 0) {
         const dpmm = document.getElementById('dpmm').value;
         const w = document.getElementById('width').value;
         const h = document.getElementById('height').value;
 
+        const strategies = [
+            // Estratégia 0: text/plain SEM encoding
+            {
+                headers: { 'Accept': 'application/pdf', 'Content-Type': 'text/plain; charset=utf-8' },
+                body: zpl
+            },
+            // Estratégia 1: urlencoded
+            {
+                headers: { 'Accept': 'application/pdf', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
+                body: encodeURIComponent(zpl)
+            },
+            // Estratégia 2: text/plain com encoding manual
+            {
+                headers: { 'Accept': 'application/pdf', 'Content-Type': 'text/plain; charset=utf-8' },
+                body: zpl.replace(/%/g, '%25').replace(/\n/g, '%0A')
+            }
+        ];
+
+        const config = strategies[strategy];
+        logDebug(`🔄 Tentativa ${strategy + 1}: ${config.headers['Content-Type']}`);
+
         const response = await fetch(`https://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${w}x${h}/0/`, {
             method: 'POST',
-            headers: {
-                'Accept': 'application/pdf',
-                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-            },
-            body: encodeURIComponent(zpl)
+            headers: config.headers,
+            body: config.body
         });
 
+        logDebug(`📡 Status: ${response.status} ${response.statusText}`);
+
         if (!response.ok) {
-            throw new Error(`${response.status}: ${await response.text()}`);
+            const errorText = await response.text();
+            logDebug(`❌ Erro: ${errorText.substring(0, 200)}`);
+            throw new Error(`${response.status}: ${errorText}`);
         }
 
         return await response.blob();
     }
 
-    async function mergePdfs(blobs) {
-        const { PDFDocument } = await import('https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js');
-        const mergedPdf = await PDFDocument.create();
-        
-        for (const blob of blobs) {
-            const pdfBytes = await blob.arrayBuffer();
-            const donor = await PDFDocument.load(pdfBytes);
-            const pages = await mergedPdf.copyPages(donor, donor.getPageIndices());
-            pages.forEach(page => mergedPdf.addPage(page));
-        }
-        
-        return await mergedPdf.save();
-    }
-
-    async function startConversion() {
-        if (!fileInput.files[0]) {
-            updateStatus("❌ Selecione um arquivo!", "error");
+    async function testSingleLabel() {
+        if (!elements.fileInput.files[0]) {
+            updateStatus("❌ Carregue um arquivo primeiro!", "error");
             return;
         }
 
-        btn.disabled = true;
-        progressBar.style.display = 'block';
-        updateStatus("📖 Analisando arquivo Shopee...", "loading");
+        elements.testBtn.disabled = true;
+        updateStatus("🧪 Testando 1ª etiqueta...", "loading");
+        elements.progressBar.style.display = 'block';
 
         try {
-            const content = await fileInput.files[0].text();
-            const labels = extractShopeeLabels(content);
-
-            if (labels.length === 0) {
-                throw new Error("❌ Nenhuma etiqueta válida encontrada!\nFormato esperado: ~DGR...^XA...^XZ");
-            }
-
-            updateStatus(`✅ ${labels.length} etiquetas Shopee encontradas!\n🚀 Iniciando conversão...`, "progress");
+            const content = await elements.fileInput.files[0].text();
+            const labels = extractLabels(content);
             
-            const pdfBlobs = [];
-            
-            // Converte cada etiqueta individualmente
-            for (let i = 0; i < labels.length; i++) {
-                updateProgress(i + 1, labels.length);
-                
+            if (labels.length === 0) throw new Error("Nenhuma etiqueta encontrada!");
+
+            // Testa as 3 estratégias
+            for (let i = 0; i < 3; i++) {
                 try {
-                    const blob = await convertLabel(labels[i], i, labels.length);
-                    pdfBlobs.push(blob);
-                    // Pequeno delay para não sobrecarregar
-                    await new Promise(r => setTimeout(r, 200));
-                } catch (err) {
-                    console.warn(`Etiqueta ${i+1} falhou:`, err.message);
+                    updateProgress(i + 1, 3);
+                    const blob = await tryConvertLabel(labels[0], i);
+                    
+                    // Download da 1ª página
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'teste_etiqueta_1.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    updateStatus("✅ SUCESSO! Estratégia " + (i + 1) + " funcionou!", "success");
+                    return;
+                } catch (e) {
+                    logDebug(`Estratégia ${i + 1} falhou: ${e.message}`);
                 }
             }
-
-            if (pdfBlobs.length === 0) {
-                throw new Error("❌ Nenhuma etiqueta convertida!");
-            }
-
-            // Junta todos os PDFs
-            updateStatus("🔗 Juntando PDFs...", "loading");
-            const mergedPdf = await mergePdfs(pdfBlobs);
             
-            // Download
-            const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
-            const filename = `shopee_etiquetas_${timestamp}.pdf`;
+            throw new Error("❌ Todas as 3 estratégias falharam!");
             
-            const url = URL.createObjectURL(new Blob([mergedPdf], {type: 'application/pdf'}));
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-
-            updateStatus(`✅ PRONTO! ${pdfBlobs.length}/${labels.length} etiquetas salvas em PDF`, "success");
-
         } catch (error) {
-            updateStatus(`❌ ERRO: ${error.message}`, "error");
-            console.error(error);
+            updateStatus("❌ " + error.message, "error");
         } finally {
-            btn.disabled = false;
-            setTimeout(() => {
-                progressBar.style.display = 'none';
-                progressFill.style.width = '0%';
-            }, 3000);
+            elements.testBtn.disabled = false;
+            setTimeout(() => elements.progressBar.style.display = 'none', 1000);
         }
     }
 
-    btn.addEventListener('click', startConversion);
+    async function convertAll() {
+        if (!elements.fileInput.files[0]) {
+            updateStatus("❌ Carregue um arquivo!", "error");
+            return;
+        }
+
+        elements.btn.disabled = true;
+        elements.progressBar.style.display = 'block';
+        elements.debug.style.display = 'block';
+        elements.debug.innerHTML = '';
+
+        try {
+            const content = await elements.fileInput.files[0].text();
+            const labels = extractLabels(content);
+            
+            if (labels.length === 0) throw new Error("Nenhuma etiqueta válida!");
+
+            updateStatus(`🚀 Convertendo ${labels.length} etiquetas...`, "progress");
+            const pdfBlobs = [];
+
+            for (let i = 0; i < labels.length; i++) {
+                updateProgress(i + 1, labels.length);
+                
+                // Tenta as 3 estratégias até uma funcionar
+                let blob = null;
+                for (let strategy = 0; strategy < 3; strategy++) {
+                    try {
+                        blob = await tryConvertLabel(labels[i], strategy);
+                        logDebug(`✅ Etiqueta ${i + 1}: Estratégia ${strategy + 1}`);
+                        break;
+                    } catch (e) {
+                        if (strategy === 2) {
+                            logDebug(`❌ Etiqueta ${i + 1} FALHOU completamente`);
+                        }
+                    }
+                }
+                
+                if (blob) pdfBlobs.push(blob);
+                await new Promise(r => setTimeout(r, 300));
+            }
+
+            if (pdfBlobs.length === 0) throw new Error("Nenhuma convertida!");
+
+            // Merge (simplificado - download separado por enquanto)
+            const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
+            
+            for (let i = 0; i < pdfBlobs.length; i++) {
+                const url = URL.createObjectURL(pdfBlobs[i]);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `etiqueta_${i + 1}_${timestamp}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            updateStatus(`✅ ${pdfBlobs.length}/${labels.length} PDFs baixados!`, "success");
+
+        } catch (error) {
+            updateStatus("❌ " + error.message, "error");
+        } finally {
+            elements.btn.disabled = false;
+            setTimeout(() => elements.progressBar.style.display = 'none', 2000);
+        }
+    }
+
+    elements.testBtn.addEventListener('click', testSingleLabel);
+    elements.btn.addEventListener('click', convertAll);
 </script>
 
 </body>
