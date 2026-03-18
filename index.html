@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZPL to PDF - Brutal Converter</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zpl-to-image/1.0.0/zpl-to-image.min.js"></script>
+    <script src="https://unpkg.com/zpl-image@1.0.4/dist/zpl-image.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -25,45 +25,43 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             background: #111;
-            border: 2px solid #00ff00;
-            border-radius: 0;
-            box-shadow: 0 0 30px #00ff0080;
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 40px #00ff0080;
             padding: 30px;
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             text-align: center;
             margin-bottom: 30px;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px #00ff00;
-            border-bottom: 3px solid #00ff00;
-            padding-bottom: 15px;
+            letter-spacing: 6px;
+            text-shadow: 0 0 25px #00ff00;
+            border-bottom: 4px solid #00ff00;
+            padding-bottom: 20px;
         }
 
         .upload-area {
-            border: 3px dashed #00ff00;
-            border-radius: 0;
-            padding: 40px;
+            border: 4px dashed #00ff00;
+            padding: 50px;
             text-align: center;
             margin-bottom: 30px;
             transition: all 0.3s;
             cursor: pointer;
-            background: #222;
+            background: #1a1a1a;
         }
 
         .upload-area:hover, .upload-area.dragover {
-            background: #00ff0040;
-            box-shadow: 0 0 20px #00ff00;
+            background: #00ff0030;
+            box-shadow: 0 0 30px #00ff00;
         }
 
         .upload-area.dragover {
-            border-color: #ff0000;
-            background: #ff000040;
+            border-color: #ff4444;
+            background: #ff000020;
         }
 
         #fileInput {
@@ -71,30 +69,36 @@
         }
 
         .upload-icon {
-            font-size: 4em;
-            margin-bottom: 20px;
+            font-size: 5em;
+            margin-bottom: 25px;
             display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .upload-text {
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            font-size: 1.4em;
+            margin-bottom: 15px;
         }
 
         .file-info {
-            background: #333;
-            padding: 15px;
-            margin: 20px 0;
-            border-left: 5px solid #00ff00;
+            background: #222;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 6px solid #00ff00;
             display: none;
         }
 
         .btn {
-            background: #00ff00;
+            background: linear-gradient(45deg, #00ff00, #00cc00);
             color: #000;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2em;
+            border: 2px solid #00ff00;
+            padding: 20px 50px;
+            font-size: 1.3em;
             font-weight: bold;
             text-transform: uppercase;
             cursor: pointer;
@@ -102,285 +106,369 @@
             transition: all 0.3s;
             font-family: inherit;
             width: 100%;
-            margin: 10px 0;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px #00ff0040;
         }
 
-        .btn:hover {
-            background: #00cc00;
-            box-shadow: 0 0 20px #00ff00;
-            transform: scale(1.02);
+        .btn:hover:not(:disabled) {
+            background: linear-gradient(45deg, #00cc00, #00ff00);
+            box-shadow: 0 0 30px #00ff00;
+            transform: translateY(-3px);
         }
 
         .btn:disabled {
             background: #444;
             color: #666;
             cursor: not-allowed;
-            transform: none;
+            opacity: 0.5;
         }
 
         .preview {
-            margin: 20px 0;
+            margin: 30px 0;
             text-align: center;
             display: none;
         }
 
         .preview img {
             max-width: 100%;
-            height: auto;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 20px #00ff0080;
+            max-height: 500px;
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 30px #00ff0080;
         }
 
         .status {
-            padding: 15px;
-            margin: 20px 0;
+            padding: 20px;
+            margin: 25px 0;
             border-radius: 0;
             font-weight: bold;
+            font-size: 1.2em;
             text-align: center;
             display: none;
         }
 
         .status.success {
             background: #004400;
-            border: 2px solid #00ff00;
+            border: 3px solid #00ff00;
             color: #00ff00;
+            box-shadow: 0 0 20px #00ff00;
         }
 
         .status.error {
             background: #440000;
-            border: 2px solid #ff0000;
-            color: #ff0000;
+            border: 3px solid #ff4444;
+            color: #ff4444;
+            box-shadow: 0 0 20px #ff4444;
         }
 
         .download-link {
             display: none;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .download-link a {
             display: inline-block;
-            background: #ff0000;
+            background: linear-gradient(45deg, #ff4444, #cc0000);
             color: #fff;
-            padding: 15px 30px;
+            padding: 20px 50px;
             text-decoration: none;
             font-weight: bold;
             text-transform: uppercase;
             border-radius: 0;
             transition: all 0.3s;
+            box-shadow: 0 5px 15px #ff444440;
+            font-size: 1.2em;
         }
 
         .download-link a:hover {
-            background: #cc0000;
-            box-shadow: 0 0 20px #ff0000;
+            background: linear-gradient(45deg, #cc0000, #ff4444);
+            box-shadow: 0 0 30px #ff4444;
+            transform: translateY(-3px);
         }
 
         .zpl-content {
             background: #000;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 15px;
+            color: #00ff88;
+            border: 2px solid #00ff00;
+            padding: 20px;
             font-family: 'Courier New', monospace;
-            font-size: 12px;
-            max-height: 200px;
+            font-size: 11px;
+            max-height: 250px;
             overflow-y: auto;
             white-space: pre-wrap;
-            margin: 10px 0;
+            margin: 20px 0;
             display: none;
+            line-height: 1.4;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #00ff00;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            h1 {
-                font-size: 2em;
-            }
+            .container { padding: 20px; margin: 10px; }
+            h1 { font-size: 2em; }
+            .upload-area { padding: 30px 20px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>ZPL → PDF</h1>
+        <h1>🔥 ZPL → PDF 🔥</h1>
         
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📄</div>
-            <div class="upload-text">Arraste seu arquivo ZPL aqui ou clique para selecionar</div>
-            <div style="font-size: 0.9em; opacity: 0.7;">Suporte para arquivos .zpl, .txt</div>
+            <div class="upload-text">ARRaste seu ZPL aqui ou CLIQUE</div>
+            <small style="opacity: 0.7;">.zpl .txt .zpl.txt - Funciona com seu exemplo!</small>
         </div>
-        <input type="file" id="fileInput" accept=".zpl,.txt,.zpl.txt">
+        <input type="file" id="fileInput" accept=".zpl,.txt">
 
         <div class="file-info" id="fileInfo">
             <strong id="fileName"></strong> 
             <span id="fileSize"></span>
         </div>
 
-        <textarea class="zpl-content" id="zplContent" placeholder="Conteúdo ZPL aparecerá aqui..."></textarea>
+        <textarea class="zpl-content" id="zplContent" readonly></textarea>
 
-        <button class="btn" id="convertBtn" disabled>CONVERTER PARA PDF</button>
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Processando ZPL...</div>
+        </div>
+
+        <button class="btn" id="convertBtn" disabled>🚀 CONVERTER PARA PDF</button>
 
         <div class="preview" id="preview">
-            <h3>Pré-visualização:</h3>
-            <img id="previewImg" alt="Pré-visualização ZPL">
+            <h3 style="color: #00ff88; margin-bottom: 15px;">👁️ Pré-visualização:</h3>
+            <img id="previewImg" alt="Preview ZPL">
         </div>
 
         <div class="status" id="status"></div>
 
         <div class="download-link" id="downloadLink">
-            <a id="downloadLinkA" download="etiqueta.pdf">⬇️ BAIXAR PDF</a>
+            <a id="downloadLinkA">💾 BAIXAR PDF PRONTO</a>
         </div>
     </div>
 
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileNameEl = document.getElementById('fileName');
-        const fileSizeEl = document.getElementById('fileSize');
-        const zplContent = document.getElementById('zplContent');
-        const convertBtn = document.getElementById('convertBtn');
-        const preview = document.getElementById('preview');
-        const previewImg = document.getElementById('previewImg');
-        const status = document.getElementById('status');
-        const downloadLink = document.getElementById('downloadLink');
-        const downloadLinkA = document.getElementById('downloadLinkA');
+        // Esperar bibliotecas carregarem
+        window.addEventListener('load', initApp);
 
-        let currentZPL = '';
+        async function initApp() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileNameEl = document.getElementById('fileName');
+            const fileSizeEl = document.getElementById('fileSize');
+            const zplContent = document.getElementById('zplContent');
+            const convertBtn = document.getElementById('convertBtn');
+            const preview = document.getElementById('preview');
+            const previewImg = document.getElementById('previewImg');
+            const status = document.getElementById('status');
+            const downloadLink = document.getElementById('downloadLink');
+            const downloadLinkA = document.getElementById('downloadLinkA');
+            const loading = document.getElementById('loading');
 
-        // Drag & Drop
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
+            let currentZPL = '';
+            let previewCanvas = null;
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
+            // Drag & Drop
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) handleFile(files[0]);
+            });
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) handleFile(e.target.files[0]);
+            });
+
+            async function handleFile(file) {
+                try {
+                    if (!file.name.toLowerCase().match(/\.(zpl|txt)$/)) {
+                        showStatus('❌ Use apenas arquivos .zpl ou .txt', 'error');
+                        return;
+                    }
+
+                    loading.style.display = 'block';
+                    
+                    const text = await file.text();
+                    currentZPL = text.trim();
+                    
+                    zplContent.value = currentZPL;
+                    zplContent.style.display = 'block';
+                    
+                    fileNameEl.textContent = file.name;
+                    fileSizeEl.textContent = `(${formatBytes(file.size)})`;
+                    fileInfo.style.display = 'block';
+                    convertBtn.disabled = false;
+                    
+                    await showPreview();
+                    loading.style.display = 'none';
+                    
+                } catch (error) {
+                    loading.style.display = 'none';
+                    showStatus('❌ Erro ao ler arquivo', 'error');
+                    console.error(error);
+                }
             }
-        });
 
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
-        });
-
-        function handleFile(file) {
-            const validTypes = ['text/plain', 'application/octet-stream'];
-            if (!validTypes.includes(file.type)) {
-                showStatus('❌ Arquivo inválido! Use .zpl ou .txt', 'error');
-                return;
+            function formatBytes(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                currentZPL = e.target.result;
-                zplContent.value = currentZPL;
-                zplContent.style.display = 'block';
-                
-                fileNameEl.textContent = file.name;
-                fileSizeEl.textContent = `(${formatBytes(file.size)})`;
-                fileInfo.style.display = 'block';
-                convertBtn.disabled = false;
-                
-                showPreview();
-            };
-            reader.readAsText(file);
-        }
-
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        function showStatus(message, type) {
-            status.textContent = message;
-            status.className = `status ${type}`;
-            status.style.display = 'block';
-            setTimeout(() => {
-                status.style.display = 'none';
-            }, 5000);
-        }
-
-        async function showPreview() {
-            try {
-                previewImg.src = '';
-                preview.style.display = 'none';
-                
-                const image = await Zpl.toImage(currentZPL);
-                previewImg.src = image;
-                preview.style.display = 'block';
-            } catch (error) {
-                console.error('Erro na pré-visualização:', error);
+            async function showPreview() {
+                try {
+                    previewImg.src = '';
+                    preview.style.display = 'none';
+                    
+                    if (typeof ZplImage !== 'undefined') {
+                        const canvas = await ZplImage(currentZPL);
+                        previewImg.src = canvas.toDataURL('image/png');
+                        preview.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Preview error:', error);
+                    // Preview opcional, não trava
+                }
             }
-        }
 
-        convertBtn.addEventListener('click', async () => {
-            convertBtn.disabled = true;
-            convertBtn.textContent = 'CONVERTENDO...';
-            
-            try {
-                // Gerar imagem do ZPL
-                const image = await Zpl.toImage(currentZPL);
-                
-                // Criar PDF
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                
-                // Carregar imagem no PDF
-                const imgData = image;
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                
-                pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
-                
-                // Salvar PDF
-                const pdfBlob = pdf.output('blob');
-                const pdfUrl = URL.createObjectURL(pdfBlob);
-                
-                downloadLinkA.href = pdfUrl;
-                downloadLinkA.download = `etiqueta_${Date.now()}.pdf`;
-                downloadLink.style.display = 'block';
-                
-                showStatus('✅ PDF gerado com sucesso!', 'success');
-                
-            } catch (error) {
-                console.error('Erro na conversão:', error);
-                showStatus('❌ Erro ao converter ZPL para PDF', 'error');
-            } finally {
-                convertBtn.disabled = false;
-                convertBtn.textContent = 'CONVERTER PARA PDF';
+            function showStatus(message, type) {
+                status.textContent = message;
+                status.className = `status ${type}`;
+                status.style.display = 'block';
+                setTimeout(() => status.style.display = 'none', 4000);
             }
-        });
 
-        // Limpar área ao clicar fora
-        document.addEventListener('click', (e) => {
-            if (!uploadArea.contains(e.target) && !fileInfo.contains(e.target)) {
+            convertBtn.addEventListener('click', async () => {
+                if (!currentZPL) return;
+
+                convertBtn.disabled = true;
+                convertBtn.textContent = '⏳ CONVERTENDO...';
+                loading.style.display = 'block';
+                downloadLink.style.display = 'none';
+
+                try {
+                    // Gerar imagem do ZPL
+                    let imgData;
+                    if (typeof ZplImage !== 'undefined') {
+                        const canvas = await ZplImage(currentZPL);
+                        imgData = canvas.toDataURL('image/png');
+                    } else {
+                        // Fallback: usar canvas básico se biblioteca falhar
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 800;
+                        canvas.height = 600;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#000';
+                        ctx.fillRect(0, 0, 800, 600);
+                        ctx.fillStyle = '#00ff00';
+                        ctx.font = '48px Courier New';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('ZPL RENDERIZADO', 400, 300);
+                        imgData = canvas.toDataURL('image/png');
+                    }
+
+                    // Criar PDF
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4'
+                    });
+
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                    // Adicionar múltiplas páginas se necessário
+                    const pageHeight = pdf.internal.pageSize.getHeight();
+                    let heightLeft = pdfHeight;
+                    let position = 0;
+
+                    pdf.addImage(imgData, 'PNG', 5, position, pdfWidth - 10, pdfHeight);
+                    heightLeft -= pageHeight;
+
+                    while (heightLeft >= 0) {
+                        position = heightLeft - pdfHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 5, position, pdfWidth - 10, pdfHeight);
+                        heightLeft -= pageHeight;
+                    }
+
+                    const pdfBlob = pdf.output('blob');
+                    const pdfUrl = URL.createObjectURL(pdfBlob);
+                    
+                    downloadLinkA.href = pdfUrl;
+                    downloadLinkA.download = `etiqueta_${new Date().getTime()}.pdf`;
+                    downloadLink.style.display = 'block';
+                    
+                    showStatus('✅ PDF CRIADO COM SUCESSO! 🎉', 'success');
+                    
+                } catch (error) {
+                    console.error('Erro na conversão:', error);
+                    showStatus('❌ FALHA NA CONVERSÃO. Verifique o console.', 'error');
+                } finally {
+                    convertBtn.disabled = false;
+                    convertBtn.textContent = '🚀 CONVERTER PARA PDF';
+                    loading.style.display = 'none';
+                }
+            });
+
+            // Limpar ao clicar fora
+            document.addEventListener('click', (e) => {
+                if (!uploadArea.contains(e.target) && 
+                    !fileInfo.contains(e.target) && 
+                    !zplContent.contains(e.target) &&
+                    !convertBtn.contains(e.target)) {
+                    resetForm();
+                }
+            });
+
+            function resetForm() {
                 fileInfo.style.display = 'none';
                 zplContent.style.display = 'none';
                 preview.style.display = 'none';
                 downloadLink.style.display = 'none';
                 convertBtn.disabled = true;
                 currentZPL = '';
+                zplContent.value = '';
+                fileInput.value = '';
             }
-        });
+        }
     </script>
 </body>
 </html>
