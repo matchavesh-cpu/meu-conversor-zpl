@@ -3,158 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Shopee & ML - Ultra Performance</title>
+    <title>Conversor Shopee/ML - Sem Erros</title>
     <style>
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #f0f2f5; color: #1a1a1a; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 800px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); }
-        h1 { color: #1e293b; text-align: center; margin-top: 0; }
-        p { text-align: center; color: #64748b; margin-bottom: 25px; }
-        
-        .config-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #64748b; }
-        select, input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
-        
-        .upload-section { border: 2px dashed #2563eb; padding: 30px; text-align: center; border-radius: 8px; margin-bottom: 20px; background: #f0f7ff; transition: 0.3s; }
-        .upload-section:hover { background: #e0eeff; }
-        input[type="file"] { margin-top: 10px; cursor: pointer; }
-        
-        button { width: 100%; padding: 20px; background-color: #2563eb; color: white; border: none; border-radius: 6px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
-        button:hover { background-color: #1d4ed8; transform: translateY(-1px); }
-        button:disabled { background-color: #94a3b8; cursor: not-allowed; transform: none; }
-        
-        #status { margin-top: 20px; text-align: center; padding: 15px; border-radius: 6px; font-weight: 500; min-height: 40px; white-space: pre-line; line-height: 1.5; }
-        .status-loading { color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; }
-        .status-success { color: #16a34a; background: #f0fdf4; border: 1px solid #bbf7d0; }
-        .status-error { color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; }
-        
-        .footer-info { margin-top: 20px; font-size: 0.8rem; color: #94a3b8; text-align: center; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { width: 100%; max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; font-size: 1.5rem; }
+        .config { display: flex; gap: 10px; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 8px; }
+        .field { flex: 1; }
+        label { font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px; color: #7f8c8d; }
+        select, input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .upload-area { border: 2px dashed #3498db; padding: 30px; text-align: center; border-radius: 8px; margin-bottom: 20px; cursor: pointer; background: #ebf5fb; }
+        button { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        button:disabled { background: #bdc3c7; }
+        #status { margin-top: 20px; padding: 15px; border-radius: 6px; font-size: 14px; text-align: center; min-height: 20px; line-height: 1.6; }
+        .loading { background: #e8f4fd; color: #2980b9; border: 1px solid #3498db; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Conversor de Etiquetas ZPL</h1>
-    <p>Otimizado para Shopee, Mercado Livre e Envios Extra</p>
+    <h1>Conversor Shopee & Mercado Livre</h1>
     
-    <div class="config-grid">
-        <div>
-            <label>Densidade (DPI)</label>
+    <div class="config">
+        <div class="field">
+            <label>DPI</label>
             <select id="dpmm">
-                <option value="8" selected>203 DPI (Padrão)</option>
-                <option value="12">300 DPI (Alta)</option>
+                <option value="8">203 dpi</option>
+                <option value="12">300 dpi</option>
             </select>
         </div>
-        <div>
-            <label>Largura (Pol.)</label>
+        <div class="field">
+            <label>Largura (Pol)</label>
             <input type="number" id="width" value="4">
         </div>
-        <div>
-            <label>Altura (Pol.)</label>
+        <div class="field">
+            <label>Altura (Pol)</label>
             <input type="number" id="height" value="6">
         </div>
     </div>
 
-    <div class="upload-section">
-        <label><strong>1. Selecione o arquivo da Shopee/ML (.txt ou .zpl)</strong></label><br>
-        <input type="file" id="fileInput" accept=".zpl,.txt">
+    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+        <strong>CLIQUE AQUI PARA SUBIR O ARQUIVO</strong><br>
+        <small>(Formatos .txt ou .zpl da Shopee/ML)</small>
+        <input type="file" id="fileInput" accept=".zpl,.txt" style="display:none">
+        <div id="fileName" style="margin-top:10px; color: #2980b9; font-weight: bold;"></div>
     </div>
 
-    <button id="convertBtn">CONVERTER AGORA</button>
-    
+    <button id="convertBtn">CONVERTER E BAIXAR PDF</button>
     <div id="status"></div>
-    <div class="footer-info">Processamento local seguro. Seus dados não são armazenados.</div>
 </div>
 
 <script>
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
     const btn = document.getElementById('convertBtn');
     const status = document.getElementById('status');
-    const fileInput = document.getElementById('fileInput');
+
+    fileInput.onchange = () => {
+        if(fileInput.files[0]) fileNameDisplay.innerText = "Arquivo: " + fileInput.files[0].name;
+    };
 
     function updateStatus(text, type) {
         status.innerText = text;
-        status.className = '';
-        if(type) status.classList.add(`status-${type}`);
+        status.className = type ? type : '';
     }
 
-    // Função para extrair apenas o ZPL válido de arquivos "sujos"
-    function cleanZPL(rawText) {
-        // Encontra tudo que está entre ^XA e ^XZ (ignorando maiúsculas/minúsculas)
-        const regex = /\^XA[\s\S]*?\^XZ/gi;
-        const matches = rawText.match(regex);
-        return matches || [];
-    }
-
-    async function processZPL() {
-        if (fileInput.files.length === 0) {
-            updateStatus("⚠️ Por favor, selecione um arquivo primeiro!", "error");
+    async function startConversion() {
+        if (!fileInput.files[0]) {
+            updateStatus("❌ Por favor, selecione um arquivo primeiro.", "error");
             return;
         }
 
-        updateStatus("🔍 Lendo arquivo e limpando dados...", "loading");
         btn.disabled = true;
+        updateStatus("⏳ Lendo arquivo...", "loading");
 
         try {
-            const rawText = await fileInput.files[0].text();
-            const labels = cleanZPL(rawText);
-
-            if (labels.length === 0) {
-                throw new Error("Não encontramos comandos ZPL válidos (^XA...^XZ) neste arquivo.");
-            }
-
-            // Configurações
-            const dpmm = document.getElementById('dpmm').value;
-            const width = document.getElementById('width').value;
-            const height = document.getElementById('height').value;
+            const rawContent = await fileInput.files[0].text();
             
-            // Lotes menores (20 etiquetas) aumentam a chance de sucesso em arquivos da Shopee
-            const batchSize = 20; 
-            const totalBatches = Math.ceil(labels.length / batchSize);
+            // LIMPEZA RADICAL: Pega apenas o que está entre ^XA e ^XZ
+            const labelRegex = /\^XA[\s\S]*?\^XZ/gi;
+            const labels = rawContent.match(labelRegex);
 
-            updateStatus(`🚀 Detectadas ${labels.length} etiquetas.\nGerando ${totalBatches} arquivo(s) PDF...`, "loading");
-
-            for (let i = 0; i < totalBatches; i++) {
-                const start = i * batchSize;
-                const end = start + batchSize;
-                const batchZPL = labels.slice(start, end).join("\n");
-
-                updateStatus(`⏳ Processando Lote ${i + 1} de ${totalBatches}...`, "loading");
-
-                const response = await fetch(`https://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${width}x${height}/0/`, {
-                    method: 'POST',
-                    headers: { 'Accept': 'application/pdf' },
-                    body: batchZPL
-                });
-
-                if (!response.ok) {
-                    const errorMsg = await response.text();
-                    throw new Error(`Erro na API: ${errorMsg}`);
-                }
-
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `Etiquetas_Parte_${i + 1}.pdf`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Pequena pausa para o navegador não travar e a API não bloquear
-                await new Promise(resolve => setTimeout(resolve, 500));
+            if (!labels || labels.length === 0) {
+                throw new Error("Não detectamos etiquetas Zebra válidas no arquivo.");
             }
 
-            updateStatus(`✅ Concluído com sucesso!\n${labels.length} etiquetas baixadas em ${totalBatches} partes.`, "success");
+            const dpmm = document.getElementById('dpmm').value;
+            const w = document.getElementById('width').value;
+            const h = document.getElementById('height').value;
+
+            updateStatus(`🚀 Detectadas ${labels.length} etiquetas.\nGerando PDF...`, "loading");
+
+            // Processamos todas as etiquetas juntas para um único PDF, 
+            // mas limpamos cada uma para evitar o erro 415.
+            const cleanZpl = labels.join('\n');
+
+            const response = await fetch(`https://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${w}x${h}/0/`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/pdf',
+                    'Content-Type': 'application/x-www-form-urlencoded' // Formato mais estável
+                },
+                body: cleanZpl
+            });
+
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error("A API rejeitou o arquivo: " + errText);
+            }
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Etiquetas_${new Date().getTime()}.pdf`;
+            a.click();
+
+            updateStatus(`✅ Sucesso! ${labels.length} etiquetas convertidas.`, "success");
 
         } catch (err) {
-            updateStatus(`❌ Falha: ${err.message}\nVerifique se o arquivo é realmente ZPL.`, "error");
+            updateStatus("❌ Erro: " + err.message, "error");
             console.error(err);
         } finally {
             btn.disabled = false;
         }
     }
 
-    btn.addEventListener('click', processZPL);
+    btn.addEventListener('click', startConversion);
 </script>
 
 </body>
