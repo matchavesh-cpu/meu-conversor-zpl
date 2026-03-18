@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔥 Conversor Shopee/ML - FUNCIONA!</title>
+    <title>🔥 Conversor Shopee/ML - FORMATO SHOPEE</title>
     <style>
-        /* Mesmo CSS da versão anterior - mantive igual */
         body { 
             font-family: 'Segoe UI', Tahoma, sans-serif; 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
@@ -27,7 +26,7 @@
         h1 { 
             color: #2c3e50; 
             text-align: center; 
-            font-size: 2rem; 
+            font-size: 2.2rem; 
             margin-bottom: 10px;
         }
         .subtitle {
@@ -71,6 +70,7 @@
             background: linear-gradient(135deg, #f0f2ff 0%, #e8e8ff 100%); 
             transition: all 0.3s;
         }
+        .upload-area:hover { border-color: #764ba2; transform: translateY(-2px); }
         button { 
             width: 100%; 
             padding: 18px; 
@@ -82,10 +82,7 @@
             cursor: pointer; 
             font-size: 18px; 
         }
-        button:disabled { 
-            background: #6c757d; 
-            cursor: not-allowed;
-        }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
         #status { 
             margin-top: 25px; 
             padding: 20px; 
@@ -99,48 +96,90 @@
         .loading { background: #e3f2fd; color: #1976d2; border: 2px solid #2196f3; }
         .success { background: #d4edda; color: #155724; border: 2px solid #28a745; }
         .error { background: #f8d7da; color: #721c24; border: 2px solid #dc3545; }
-        .warning { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
         .progress { background: #fff3cd; color: #856404; border: 2px solid #ffc107; }
-        #progressBar { width: 100%; height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin-top: 10px; display: none; }
-        #progressFill { height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); transition: width 0.3s; }
-        .file-info { background: #e8f5e8; padding: 10px; border-radius: 8px; margin-top: 10px; font-size: 14px; color: #155724; }
+        #progressBar { 
+            width: 100%; 
+            height: 25px; 
+            background: #e9ecef; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            margin-top: 15px; 
+            display: none; 
+        }
+        #progressFill { 
+            height: 100%; 
+            background: linear-gradient(90deg, #27ae60, #2ecc71); 
+            transition: width 0.3s; 
+            position: relative;
+        }
+        #progressText { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            color: white; 
+            font-weight: bold; 
+            font-size: 12px;
+        }
+        .file-info { 
+            background: #e8f5e8; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin-top: 10px; 
+            font-size: 14px; 
+            color: #155724; 
+        }
+        pre { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-size: 12px; 
+            max-height: 150px; 
+            overflow-y: auto; 
+            margin-top: 15px; 
+            white-space: pre-wrap; 
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🎯 Conversor Shopee/ML</h1>
-    <p class="subtitle">Converte QUALQUER tamanho de ZPL!</p>
+    <h1>🎯 Conversor SHOPEE/ML</h1>
+    <p class="subtitle">✅ Formato ~DGR da Shopee + Mercado Livre</p>
     
     <div class="config">
         <div class="field">
-            <label>DPI</label>
+            <label>📐 DPI</label>
             <select id="dpmm">
                 <option value="8" selected>203 dpi</option>
                 <option value="12">300 dpi</option>
             </select>
         </div>
         <div class="field">
-            <label>Largura</label>
-            <input type="number" id="width" value="4" min="1" max="12" step="0.1">
+            <label>📏 Largura</label>
+            <input type="number" id="width" value="4" min="2" max="8" step="0.1">
         </div>
         <div class="field">
-            <label>Altura</label>
-            <input type="number" id="height" value="6" min="1" max="20" step="0.1">
+            <label>📐 Altura</label>
+            <input type="number" id="height" value="6" min="2" max="12" step="0.1">
         </div>
     </div>
 
     <div class="upload-area" id="uploadArea">
-        <strong>📁 ARRASTE ou CLIQUE seu arquivo ZPL</strong><br>
-        <small>Funciona com .zpl, .txt, .lab da Shopee/ML</small>
+        <strong>📁 ARRASTE ou CLIQUE seu arquivo</strong><br>
+        <small>✅ .zpl, .txt, .lab da Shopee/ML</small>
         <input type="file" id="fileInput" accept=".zpl,.txt,.lab" style="display:none">
         <div id="fileName" class="file-info" style="display: none;"></div>
+        <pre id="preview"></pre>
     </div>
 
     <button id="convertBtn">🚀 CONVERTER PARA PDF</button>
     
     <div id="progressBar">
-        <div id="progressFill" style="width: 0%"></div>
+        <div id="progressFill">
+            <div id="progressText">0%</div>
+        </div>
     </div>
     <div id="status"></div>
 </div>
@@ -149,35 +188,49 @@
     const fileInput = document.getElementById('fileInput');
     const uploadArea = document.getElementById('uploadArea');
     const fileNameDisplay = document.getElementById('fileName');
+    const preview = document.getElementById('preview');
     const btn = document.getElementById('convertBtn');
     const status = document.getElementById('status');
     const progressBar = document.getElementById('progressBar');
     const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
 
     // Drag & Drop
-    ['dragover', 'dragenter'].forEach(event => {
-        uploadArea.addEventListener(event, e => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'copy';
-        });
+    uploadArea.addEventListener('dragover', e => {
+        e.preventDefault();
+        uploadArea.style.borderColor = '#764ba2';
     });
-
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.borderColor = '#667eea';
+    });
     uploadArea.addEventListener('drop', e => {
         e.preventDefault();
-        fileInput.files = e.dataTransfer.files;
-        handleFileSelect(e.dataTransfer.files[0]);
+        uploadArea.style.borderColor = '#667eea';
+        if (e.dataTransfer.files[0]) {
+            fileInput.files = e.dataTransfer.files;
+            handleFileSelect(e.dataTransfer.files[0]);
+        }
     });
-
     uploadArea.addEventListener('click', () => fileInput.click());
-    
+
     fileInput.onchange = e => {
         if (e.target.files[0]) handleFileSelect(e.target.files[0]);
     };
 
     function handleFileSelect(file) {
-        fileNameDisplay.innerHTML = `📄 <strong>${file.name}</strong><br>Tamanho: ${(file.size/1024/1024).toFixed(2)} MB`;
+        fileNameDisplay.innerHTML = `📄 <strong>${file.name}</strong><br>📊 ${(file.size/1024).toFixed(0)} KB`;
         fileNameDisplay.style.display = 'block';
         btn.disabled = false;
+
+        // Preview
+        const reader = new FileReader();
+        reader.onload = e => {
+            const content = e.target.result;
+            const labels = extractShopeeLabels(content);
+            preview.textContent = `✅ Encontradas ${labels.length} etiquetas\n\n${labels[0]?.substring(0, 500)}...`;
+            preview.style.display = 'block';
+        };
+        reader.readAsText(file);
     }
 
     function updateStatus(text, type = '') {
@@ -186,12 +239,45 @@
     }
 
     function updateProgress(current, total) {
-        const percent = (current / total * 100).toFixed(1);
+        const percent = Math.round((current / total) * 100);
         progressFill.style.width = percent + '%';
-        status.textContent = `⏳ Processando ${current}/${total} etiquetas (${percent}%)`;
+        progressText.textContent = `${percent}% (${current}/${total})`;
     }
 
-    async function convertSingleLabel(zpl, index, total) {
+    // 🔥 EXTRAÇÃO ESPECÍFICA PARA FORMATO SHOPEE
+    function extractShopeeLabels(content) {
+        // Remove BOM e normaliza
+        content = content.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+        
+        const labels = [];
+        
+        // Padrão SHOPEE: ~DGR:...^XA...^XZ
+        const shopeePattern = /~DGR:.*?^XA([\s\S]*?)\^XZ/gi;
+        let match;
+        
+        while ((match = shopeePattern.exec(content)) !== null) {
+            const labelContent = `^XA${match[1]}^XZ`;
+            labels.push(labelContent.trim());
+        }
+        
+        // Fallback padrão ZPL
+        if (labels.length === 0) {
+            const standardPattern = /\^XA([\s\S]*?)\^XZ/gi;
+            while ((match = standardPattern.exec(content)) !== null) {
+                const labelContent = `^XA${match[1]}^XZ`;
+                labels.push(labelContent.trim());
+            }
+        }
+        
+        // Fallback arquivo único
+        if (labels.length === 0 && content.includes('^XA')) {
+            labels.push(content.trim());
+        }
+        
+        return labels.filter(l => l.length > 50);
+    }
+
+    async function convertLabel(zpl, index, total) {
         const dpmm = document.getElementById('dpmm').value;
         const w = document.getElementById('width').value;
         const h = document.getElementById('height').value;
@@ -202,15 +288,28 @@
                 'Accept': 'application/pdf',
                 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
             },
-            body: encodeURIComponent(zpl)  // 🔑 CADA etiqueta ENCODED separadamente
+            body: encodeURIComponent(zpl)
         });
 
         if (!response.ok) {
-            const err = await response.text();
-            throw new Error(`Etiqueta ${index + 1}: ${response.status} - ${err}`);
+            throw new Error(`${response.status}: ${await response.text()}`);
         }
 
         return await response.blob();
+    }
+
+    async function mergePdfs(blobs) {
+        const { PDFDocument } = await import('https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js');
+        const mergedPdf = await PDFDocument.create();
+        
+        for (const blob of blobs) {
+            const pdfBytes = await blob.arrayBuffer();
+            const donor = await PDFDocument.load(pdfBytes);
+            const pages = await mergedPdf.copyPages(donor, donor.getPageIndices());
+            pages.forEach(page => mergedPdf.addPage(page));
+        }
+        
+        return await mergedPdf.save();
     }
 
     async function startConversion() {
@@ -221,103 +320,67 @@
 
         btn.disabled = true;
         progressBar.style.display = 'block';
-        updateStatus("📖 Lendo arquivo...", "loading");
+        updateStatus("📖 Analisando arquivo Shopee...", "loading");
 
         try {
-            const rawContent = await fileInput.files[0].text();
-            const labels = extractZPLLabels(rawContent);
+            const content = await fileInput.files[0].text();
+            const labels = extractShopeeLabels(content);
 
-            if (!labels?.length) {
-                throw new Error("❌ Nenhuma etiqueta ZPL válida encontrada!\nVerifique se contém ^XA e ^XZ");
+            if (labels.length === 0) {
+                throw new Error("❌ Nenhuma etiqueta válida encontrada!\nFormato esperado: ~DGR...^XA...^XZ");
             }
 
-            updateStatus(`🚀 ${labels.length} etiquetas encontradas!\n🔄 Convertendo...`, "progress");
+            updateStatus(`✅ ${labels.length} etiquetas Shopee encontradas!\n🚀 Iniciando conversão...`, "progress");
             
-            // 🔥 CONVERTE CADA ETIQUETA SEPARADAMENTE
             const pdfBlobs = [];
+            
+            // Converte cada etiqueta individualmente
             for (let i = 0; i < labels.length; i++) {
                 updateProgress(i + 1, labels.length);
                 
                 try {
-                    const blob = await convertSingleLabel(labels[i], i, labels.length);
+                    const blob = await convertLabel(labels[i], i, labels.length);
                     pdfBlobs.push(blob);
-                    await new Promise(r => setTimeout(r, 100)); // Delay para não sobrecarregar API
+                    // Pequeno delay para não sobrecarregar
+                    await new Promise(r => setTimeout(r, 200));
                 } catch (err) {
-                    console.warn(`Falha na etiqueta ${i + 1}:`, err.message);
-                    // Continua com as outras
+                    console.warn(`Etiqueta ${i+1} falhou:`, err.message);
                 }
             }
 
             if (pdfBlobs.length === 0) {
-                throw new Error("❌ Nenhuma etiqueta foi convertida com sucesso!");
+                throw new Error("❌ Nenhuma etiqueta convertida!");
             }
 
-            // 🔥 JUNTA TODOS OS PDFs
+            // Junta todos os PDFs
+            updateStatus("🔗 Juntando PDFs...", "loading");
             const mergedPdf = await mergePdfs(pdfBlobs);
             
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-            const fileName = `etiquetas_${fileInput.files[0].name.replace(/\.[^/.]+$/, "")}_${timestamp}.pdf`;
+            // Download
+            const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
+            const filename = `shopee_etiquetas_${timestamp}.pdf`;
             
-            downloadBlob(mergedPdf, fileName);
-            updateStatus(`✅ SUCESSO! ${pdfBlobs.length}/${labels.length} etiquetas convertidas`, "success");
+            const url = URL.createObjectURL(new Blob([mergedPdf], {type: 'application/pdf'}));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
 
-        } catch (err) {
-            updateStatus("❌ ERRO: " + err.message, "error");
-            console.error(err);
+            updateStatus(`✅ PRONTO! ${pdfBlobs.length}/${labels.length} etiquetas salvas em PDF`, "success");
+
+        } catch (error) {
+            updateStatus(`❌ ERRO: ${error.message}`, "error");
+            console.error(error);
         } finally {
             btn.disabled = false;
-            setTimeout(() => progressBar.style.display = 'none', 2000);
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+            }, 3000);
         }
-    }
-
-    // 🔥 MERGE DE PDFs (usando PDF-lib)
-    async function mergePdfs(pdfBlobs) {
-        const { PDFDocument } = await import('https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js');
-        
-        const mergedPdf = await PDFDocument.create();
-        
-        for (const blob of pdfBlobs) {
-            const pdfBytes = await blob.arrayBuffer();
-            const donorPdf = await PDFDocument.load(pdfBytes);
-            const copiedPages = await mergedPdf.copyPages(donorPdf, donorPdf.getPageIndices());
-            copiedPages.forEach(page => mergedPdf.addPage(page));
-        }
-        
-        return await mergedPdf.save();
-    }
-
-    function downloadBlob(blob, filename) {
-        const url = URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-    }
-
-    function extractZPLLabels(content) {
-        content = content.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
-        
-        // Extrai TODAS as etiquetas ^XA^XZ
-        let labels = [];
-        let match;
-        const regex = /\^XA([\s\S]*?)\^XZ/gi;
-        
-        while ((match = regex.exec(content)) !== null) {
-            const cleanLabel = `^XA${match[1]}^XZ\n`.trim();
-            if (cleanLabel.length > 20) {
-                labels.push(cleanLabel);
-            }
-        }
-        
-        // Fallback para arquivo único
-        if (labels.length === 0 && (content.includes('^XA') || content.includes('^XZ'))) {
-            labels = [content.trim()];
-        }
-        
-        return labels;
     }
 
     btn.addEventListener('click', startConversion);
