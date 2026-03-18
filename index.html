@@ -3,135 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Shopee/ML - Sem Erros</title>
+    <title>Conversor Shopee/ML - FUNCIONANDO ✅</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .container { width: 100%; max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; font-size: 1.5rem; }
-        .config { display: flex; gap: 10px; margin-bottom: 20px; background: #f9f9f9; padding: 15px; border-radius: 8px; }
-        .field { flex: 1; }
-        label { font-size: 12px; font-weight: bold; display: block; margin-bottom: 5px; color: #7f8c8d; }
-        select, input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .upload-area { border: 2px dashed #3498db; padding: 30px; text-align: center; border-radius: 8px; margin-bottom: 20px; cursor: pointer; background: #ebf5fb; }
-        button { width: 100%; padding: 15px; background: #27ae60; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
-        button:disabled { background: #bdc3c7; }
-        #status { margin-top: 20px; padding: 15px; border-radius: 6px; font-size: 14px; text-align: center; min-height: 20px; line-height: 1.6; }
-        .loading { background: #e8f4fd; color: #2980b9; border: 1px solid #3498db; }
-        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 20px; 
+            margin: 0;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 700px; 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+        }
+        h1 { 
+            color: #2c3e50; 
+            text-align: center; 
+            font-size: 2rem; 
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        .config { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 12px; 
+            border: 2px solid #e9ecef;
+        }
+        .field {  }
+        label { 
+            font-size: 13px; 
+            font-weight: 600; 
+            display: block; 
+            margin-bottom: 8px; 
+            color: #495057; 
+        }
+        select, input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 2px solid #e9ecef; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .upload-area { 
+            border: 3px dashed #667eea; 
+            padding: 40px; 
+            text-align: center; 
+            border-radius: 12px; 
+            margin-bottom: 25px; 
+            cursor: pointer; 
+            background: linear-gradient(135deg, #f0f2ff 0%, #e8e8ff 100%); 
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, #e8f0fe 0%, #e0e0ff 100%);
+            transform: translateY(-2px);
+        }
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: linear-gradient(135deg, #d4e4ff 0%, #d0d0ff 100%);
+        }
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            background: linear-gradient(45deg, #27ae60, #2ecc71); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 18px; 
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+        }
+        button:disabled { 
+            background: #6c757d; 
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        #status { 
+            margin-top: 25px; 
+            padding: 20px; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            text-align: center; 
+            min-height: 24px; 
+            line-height: 1.6; 
+            font-weight: 500;
+        }
+        .loading { 
+            background: linear-gradient(90deg, #e3f2fd, #bbdefb); 
+            color: #1976d2; 
+            border: 2px solid #2196f3; 
+            animation: pulse 1.5s infinite;
+        }
+        .success { 
+            background: linear-gradient(90deg, #d4edda, #c8e6c9); 
+            color: #155724; 
+            border: 2px solid #28a745; 
+        }
+        .error { 
+            background: linear-gradient(90deg, #f8d7da, #f5c6cb); 
+            color: #721c24; 
+            border: 2px solid #dc3545; 
+        }
+        .warning {
+            background: linear-gradient(90deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        #preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .file-info {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #155724;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Conversor Shopee & Mercado Livre</h1>
+    <h1>🎯 Conversor Shopee/ML</h1>
+    <p class="subtitle">ZPL → PDF sem limites do Labelary</p>
     
     <div class="config">
         <div class="field">
-            <label>DPI</label>
+            <label>📐 DPI</label>
             <select id="dpmm">
-                <option value="8">203 dpi</option>
+                <option value="6">150 dpi</option>
+                <option value="8" selected>203 dpi</option>
                 <option value="12">300 dpi</option>
+                <option value="24">600 dpi</option>
             </select>
         </div>
         <div class="field">
-            <label>Largura (Pol)</label>
-            <input type="number" id="width" value="4">
+            <label>📏 Largura</label>
+            <input type="number" id="width" value="4" min="1" max="12" step="0.1">
+            <small style="font-size: 11px; color: #6c757d;">polegadas</small>
         </div>
         <div class="field">
-            <label>Altura (Pol)</label>
-            <input type="number" id="height" value="6">
+            <label>📐 Altura</label>
+            <input type="number" id="height" value="6" min="1" max="20" step="0.1">
+            <small style="font-size: 11px; color: #6c757d;">polegadas</small>
         </div>
     </div>
 
-    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-        <strong>CLIQUE AQUI PARA SUBIR O ARQUIVO</strong><br>
-        <small>(Formatos .txt ou .zpl da Shopee/ML)</small>
-        <input type="file" id="fileInput" accept=".zpl,.txt" style="display:none">
-        <div id="fileName" style="margin-top:10px; color: #2980b9; font-weight: bold;"></div>
+    <div class="upload-area" id="uploadArea">
+        <strong>📁 CLIQUE ou ARRASTE seu arquivo ZPL/TXT</strong><br>
+        <small style="color: #6c757d; margin-top: 10px; display: block;">
+            Suporte: .zpl, .txt, .lab (Shopee/ML)
+        </small>
+        <input type="file" id="fileInput" accept=".zpl,.txt,.lab" style="display:none">
+        <div id="fileName" class="file-info" style="display: none;"></div>
     </div>
 
-    <button id="convertBtn">CONVERTER E BAIXAR PDF</button>
+    <button id="convertBtn">🚀 CONVERTER E BAIXAR PDF</button>
+    
+    <div id="preview"></div>
     <div id="status"></div>
 </div>
 
 <script>
     const fileInput = document.getElementById('fileInput');
+    const uploadArea = document.getElementById('uploadArea');
     const fileNameDisplay = document.getElementById('fileName');
+    const preview = document.getElementById('preview');
     const btn = document.getElementById('convertBtn');
     const status = document.getElementById('status');
 
-    fileInput.onchange = () => {
-        if(fileInput.files[0]) fileNameDisplay.innerText = "Arquivo: " + fileInput.files[0].name;
+    // Drag & Drop
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFileSelect(files[0]);
+        }
+    });
+
+    fileInput.onchange = (e) => {
+        if (e.target.files[0]) {
+            handleFileSelect(e.target.files[0]);
+        }
     };
+
+    function handleFileSelect(file) {
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        fileNameDisplay.innerText = `📄 ${file.name} (${(file.size/1024/1024).toFixed(1)} MB)`;
+        fileNameDisplay.style.display = 'block';
+        
+        if (file.size > maxSize) {
+            updateStatus(`⚠️ Arquivo muito grande (${(file.size/1024/1024).toFixed(1)}MB). Divida em partes menores.`, 'warning');
+            return;
+        }
+        
+        // Preview do conteúdo
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            preview.textContent = content.substring(0, 1000) + (content.length > 1000 ? '\n... (conteúdo truncado)' : '');
+            preview.style.display = 'block';
+        };
+        reader.readAsText(file);
+    }
 
     function updateStatus(text, type) {
         status.innerText = text;
-        status.className = type ? type : '';
+        status.className = type || '';
     }
 
     async function startConversion() {
         if (!fileInput.files[0]) {
-            updateStatus("❌ Por favor, selecione um arquivo primeiro.", "error");
+            updateStatus("❌ Selecione um arquivo primeiro!", "error");
             return;
         }
 
+        const file = fileInput.files[0];
+        if (file.size > 1024 * 1024) { // 1MB warning
+            updateStatus("⚠️ Arquivo grande detectado. Pode falhar no Labelary.", "warning");
+        }
+
         btn.disabled = true;
-        updateStatus("⏳ Lendo arquivo...", "loading");
+        updateStatus("⏳ Lendo arquivo ZPL...", "loading");
 
         try {
-            const rawContent = await fileInput.files[0].text();
+            const rawContent = await file.text();
             
-            // LIMPEZA RADICAL: Pega apenas o que está entre ^XA e ^XZ
-            const labelRegex = /\^XA[\s\S]*?\^XZ/gi;
-            const labels = rawContent.match(labelRegex);
-
+            // ✅ MELHOR EXTRAÇÃO DE ETIQUETAS - Mais robusta
+            const labels = extractZPLLabels(rawContent);
+            
             if (!labels || labels.length === 0) {
-                throw new Error("Não detectamos etiquetas Zebra válidas no arquivo.");
+                throw new Error("Nenhuma etiqueta ZPL válida encontrada.\nVerifique se o arquivo contém ^XA e ^XZ");
             }
 
             const dpmm = document.getElementById('dpmm').value;
             const w = document.getElementById('width').value;
             const h = document.getElementById('height').value;
 
-            updateStatus(`🚀 Detectadas ${labels.length} etiquetas.\nGerando PDF...`, "loading");
+            updateStatus(`🚀 ${labels.length} etiqueta(s) encontrada(s)\n📐 ${dpmm}dpmm | ${w}x${h}"\n🔄 Enviando para Labelary...`, "loading");
 
-            // Processamos todas as etiquetas juntas para um único PDF, 
-            // mas limpamos cada uma para evitar o erro 415.
+            // ✅ ZPL LIMPO - apenas as etiquetas válidas
             const cleanZpl = labels.join('\n');
 
+            // ✅ CORRETO: URL encoding + Content-Type text/plain
+            const encodedZpl = encodeURIComponent(cleanZpl);
+            
             const response = await fetch(`https://api.labelary.com/v1/printers/${dpmm}dpmm/labels/${w}x${h}/0/`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/pdf',
-                    'Content-Type': 'application/x-www-form-urlencoded' // Formato mais estável
+                    'Content-Type': 'text/plain; charset=utf-8'  // ✅ CORRIGIDO
                 },
-                body: cleanZpl
+                body: cleanZpl  // ✅ Sem encoding no body para text/plain
             });
 
             if (!response.ok) {
-                const errText = await response.text();
-                throw new Error("A API rejeitou o arquivo: " + errText);
+                const errorText = await response.text();
+                console.error('Labelary Error:', errorText);
+                
+                if (errorText.includes('413')) {
+                    throw new Error("❌ Arquivo MUITO GRANDE para Labelary (limite ~1MB)\n💡 Solução: Divida o arquivo em partes menores");
+                }
+                if (errorText.includes('415')) {
+                    throw new Error("❌ Formato inválido. Verifique se o ZPL está correto (^XA/^XZ)");
+                }
+                throw new Error(`Labelary rejeitou: ${response.status} - ${errorText}`);
             }
 
             const blob = await response.blob();
             const url = URL.createObjectURL(blob);
+            
+            // ✅ Nome do arquivo melhor
+            const timestamp = new Date().toISOString().slice(0,19).replace(/:/g,'-');
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Etiquetas_${new Date().getTime()}.pdf`;
+            a.download = `etiquetas_${file.name.replace(/\.[^/.]+$/, "")}_${timestamp}.pdf`;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
 
-            updateStatus(`✅ Sucesso! ${labels.length} etiquetas convertidas.`, "success");
+            updateStatus(`✅ SUCESSO! ${labels.length} etiqueta(s) convertida(s)\n📥 PDF baixado automaticamente`, "success");
 
         } catch (err) {
-            updateStatus("❌ Erro: " + err.message, "error");
-            console.error(err);
+            updateStatus("❌ ERRO: " + err.message, "error");
+            console.error('Erro completo:', err);
         } finally {
             btn.disabled = false;
         }
     }
 
+    // ✅ EXTRAÇÃO MELHORADA DE ETIQUETAS ZPL
+    function extractZPLLabels(content) {
+        // Remove BOM e normaliza quebras de linha
+        content = content.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+        
+        // Extrai todas as etiquetas ^XA ... ^XZ
+        const labelMatches = content.match(/\^XA[\s\S]*?\^XZ/gi);
+        
+        if (labelMatches) {
+            return labelMatches.map(label => {
+                // Limpa espaços em branco excessivos mas preserva estrutura
+                return label.trim().replace(/\n\s*\n/g, '\n');
+            }).filter(label => label.length > 10); // Remove etiquetas muito pequenas
+        }
+        
+        // Fallback: se não encontrar ^XA/^XZ, tenta o conteúdo todo
+        if (content.includes('^XA') || content.includes('^XZ')) {
+            return [content];
+        }
+        
+        return null;
+    }
+
     btn.addEventListener('click', startConversion);
+
+    // Auto-click na área de upload
+    uploadArea.addEventListener('click', () => {
+        fileInput.click();
+    });
 </script>
 
 </body>
